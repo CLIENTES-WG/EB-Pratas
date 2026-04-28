@@ -21,7 +21,10 @@
             padding-bottom: 80px
         }
 
-        /* HEADER */
+        body.no-scroll {
+            overflow: hidden
+        }
+
         header {
             text-align: center;
             padding: 20px
@@ -31,13 +34,12 @@
             width: 140px
         }
 
-        /* MENU */
         nav {
             display: flex;
             overflow: auto;
             gap: 8px;
             padding: 10px;
-            background: #fff;
+            background: #fff
         }
 
         nav a {
@@ -46,10 +48,9 @@
             border-radius: 20px;
             font-size: 13px;
             text-decoration: none;
-            color: #333;
+            color: #333
         }
 
-        /* SEÇÕES */
         section {
             padding: 15px
         }
@@ -59,24 +60,23 @@
             margin-bottom: 10px
         }
 
-        /* PRODUTOS */
         .products {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            gap: 10px
         }
 
         .product {
             background: #fff;
             border-radius: 10px;
-            padding: 10px;
+            padding: 10px
         }
 
         .product img {
             width: 100%;
             height: 130px;
             object-fit: cover;
-            border-radius: 8px;
+            border-radius: 8px
         }
 
         .price {
@@ -90,10 +90,9 @@
             border: none;
             background: #000;
             color: #fff;
-            border-radius: 6px;
+            border-radius: 6px
         }
 
-        /* CART */
         .cart {
             position: fixed;
             bottom: 90px;
@@ -106,7 +105,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 50;
+            z-index: 50
         }
 
         .cart span {
@@ -116,10 +115,9 @@
             background: red;
             padding: 3px 6px;
             border-radius: 50%;
-            font-size: 12px;
+            font-size: 12px
         }
 
-        /* DRAWER */
         .cartDrawer {
             position: fixed;
             bottom: 0;
@@ -132,7 +130,7 @@
             transition: .3s;
             z-index: 100;
             display: flex;
-            flex-direction: column;
+            flex-direction: column
         }
 
         .cartDrawer.active {
@@ -143,13 +141,13 @@
             padding: 15px;
             display: flex;
             justify-content: space-between;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #eee
         }
 
         .cartItems {
             flex: 1;
             overflow: auto;
-            padding: 10px;
+            padding: 10px
         }
 
         .item {
@@ -158,24 +156,56 @@
             margin-bottom: 8px;
             background: #f7f7f7;
             padding: 8px;
-            border-radius: 8px;
+            border-radius: 8px
         }
 
         .remove {
             background: none;
             border: none;
-            color: red;
+            color: red
         }
 
         .cartFooter {
             padding: 15px;
-            border-top: 1px solid #eee;
+            border-top: 1px solid #eee
+        }
+
+        .gift-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f8f8;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #eee;
+            cursor: pointer
+        }
+
+        .gift-left {
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .gift-text strong {
+            display: block;
+            font-size: 14px
+        }
+
+        .gift-text span {
+            font-size: 12px;
+            color: #666
+        }
+
+        .gift-price {
+            font-weight: bold
         }
 
         .total {
             font-weight: bold;
             font-size: 18px;
-            margin-bottom: 10px;
+            margin-bottom: 10px
         }
 
         input,
@@ -185,7 +215,7 @@
             padding: 10px;
             margin-top: 8px;
             border-radius: 8px;
-            border: 1px solid #ccc;
+            border: 1px solid #ccc
         }
 
         .checkout {
@@ -194,10 +224,9 @@
             background: #000;
             color: #fff;
             border: none;
-            border-radius: 10px;
+            border-radius: 10px
         }
 
-        /* MODAL */
         .modal {
             position: fixed;
             inset: 0;
@@ -205,7 +234,7 @@
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 200;
+            z-index: 200
         }
 
         .modal.active {
@@ -215,10 +244,9 @@
         .modal img {
             width: 90%;
             max-width: 350px;
-            border-radius: 10px;
+            border-radius: 10px
         }
 
-        /* TOAST */
         .toast {
             position: fixed;
             top: 50%;
@@ -229,10 +257,9 @@
             padding: 12px 20px;
             border-radius: 8px;
             display: none;
-            z-index: 300;
+            z-index: 300
         }
 
-        /* FOOTER */
         .footer-fixed {
             position: fixed;
             bottom: 0;
@@ -244,12 +271,12 @@
             justify-content: space-around;
             align-items: center;
             border-top: 1px solid #ddd;
-            z-index: 40;
+            z-index: 40
         }
 
         .footer-fixed a {
             color: #000;
-            font-size: 22px;
+            font-size: 22px
         }
     </style>
 </head>
@@ -276,7 +303,6 @@
         <span id="count">0</span>
     </div>
 
-    <!-- CARRINHO -->
     <div class="cartDrawer" id="cartDrawer">
         <div class="cartHeader">
             <span>Seu pedido</span>
@@ -286,7 +312,18 @@
         <div class="cartItems" id="items"></div>
 
         <div class="cartFooter">
-            <label><input type="checkbox" id="gift"> Presente (+R$1,00)</label>
+
+            <div class="gift-box" onclick="toggleGift()">
+                <div class="gift-left">
+                    <input type="checkbox" id="gift">
+                    <div class="gift-text">
+                        <strong>Embalagem para presente</strong>
+                        <span>Caixinha especial</span>
+                    </div>
+                </div>
+                <div class="gift-price">+ R$ 1,00</div>
+            </div>
+
             <div class="total" id="total"></div>
 
             <input id="name" placeholder="Seu nome">
@@ -302,14 +339,12 @@
         </div>
     </div>
 
-    <!-- MODAL -->
     <div class="modal" id="imgModal" onclick="closeImg(event)">
         <img id="imgZoom">
     </div>
 
     <div class="toast" id="toast">Produto adicionado</div>
 
-    <!-- FOOTER -->
     <div class="footer-fixed">
         <a href="#"><i class="fa-brands fa-instagram"></i></a>
         <a href="https://wa.me/5566999663851"><i class="fa-brands fa-whatsapp"></i></a>
@@ -318,60 +353,34 @@
     <script>
         const products = {
             "Brincos": [
-                {
-                    name: "Brinco Luxo", price: 55.99, images: [
-                        "https://source.unsplash.com/400x400/?earring",
-                        "https://source.unsplash.com/401x401/?earrings"
-                    ]
-                }
+                { name: "Brinco Luxo", price: 55.99, images: ["https://http2.mlstatic.com/D_NQ_NP_2X_759510-MLB91198671122_092025-F.webp", "https://http2.mlstatic.com/D_NQ_NP_2X_881322-MLB91198671124_092025-F.webp"] },
+                { name: "Brinco Delicado", price: 49.90, images: ["https://lojavivarafsv3.vtexassets.com/arquivos/ids/2490785-1600-1600/Brinco-Ocean-em-Prata-925-com-Topazio-Swiss-e-London-111949_1_set.jpg?v=638931306099300000", "https://lojavivarafsv3.vtexassets.com/arquivos/ids/2490784-1600-1600/Brinco-Ocean-em-Prata-925-com-Topazio-Swiss-e-London-111882_4_set.jpg?v=638931306092300000"] }
             ],
             "Colares": [
-                {
-                    name: "Colar Elegante", price: 89.90, images: [
-                        "https://source.unsplash.com/400x400/?necklace",
-                        "https://source.unsplash.com/401x401/?jewelry"
-                    ]
-                }
+                { name: "Colar Elegante", price: 89.90, images: ["https://lojavivarafsv3.vtexassets.com/arquivos/ids/2493730-1600-1600/Colar-em-Prata-925-com-Ametista-e-Topazios-Incolores-45cm-111955_1_set.jpg?v=638950272180230000", "https://lojavivarafsv3.vtexassets.com/arquivos/ids/2493732-1600-1600/Colar-em-Prata-925-com-Ametista-e-Topazios-Incolores-45cm-112000_3_set.jpg?v=638950272202930000"] },
+                { name: "Colar Fino", price: 79.90, images: ["https://lojavivarafsv3.vtexassets.com/arquivos/ids/2490821-1600-1600/Colar-Ocean-em-Prata-925-com-Topazio-Swiss-e-London-45cm-111958_1_set.jpg?v=638931306383470000", "https://lojavivarafsv3.vtexassets.com/arquivos/ids/2490820-1600-1600/Colar-Ocean-em-Prata-925-com-Topazio-Swiss-e-London-45cm-111900_5_set.jpg?v=638931306377400000"] }
             ],
             "Pulseiras": [
-                {
-                    name: "Pulseira Fina", price: 69.90, images: [
-                        "https://source.unsplash.com/400x400/?bracelet",
-                        "https://source.unsplash.com/401x401/?bracelet"
-                    ]
-                }
+                { name: "Pulseira Fina", price: 69.90, images: ["https://lojavivarafsv3.vtexassets.com/arquivos/ids/2498836-1600-1600/Pulseira-Life-Infinito-em-Prata-925-114009_1_set.jpg?v=638990028136270000", "https://lojavivarafsv3.vtexassets.com/arquivos/ids/2498838-1600-1600/Pulseira-Life-Infinito-em-Prata-925-114011_4_set.jpg?v=638990028149030000"] },
+                { name: "Pulseira Luxo", price: 79.90, images: ["https://lojavivarafsv3.vtexassets.com/arquivos/ids/777240-1600-1600/Pulseira-Chains-em-Prata-925-com-Topazio-London-e-Safiras-Incolores-85686_1_set.jpg?v=638437347896000000", "https://lojavivarafsv3.vtexassets.com/arquivos/ids/689665-1600-1600/Pulseira-Chains-em-Prata-925-com-Topazio-London-e-Safiras-Incolores-87446_set.jpg?v=638370368309470000"] }
             ],
             "Anéis": [
-                {
-                    name: "Anel Luxo", price: 79.90, images: [
-                        "https://source.unsplash.com/400x400/?ring",
-                        "https://source.unsplash.com/401x401/?ring"
-                    ]
-                }
+                { name: "Anel Luxo", price: 79.90, images: ["https://lojavivarafsv3.vtexassets.com/arquivos/ids/747016-1600-1600/Anel-Sky-em-Prata-925-com-Topazio-Sky-e-Topazios-Incolores-347_1_set.jpg?v=638437291402430000", "https://lojavivarafsv3.vtexassets.com/arquivos/ids/628993-1600-1600/Anel-Sky-em-Prata-925-com-Topazio-Sky-e-Topazios-Incolores-348_2_set.jpg?v=638349653271300000"] },
+                { name: "Anel Delicado", price: 69.90, images: ["https://lojavivarafsv3.vtexassets.com/arquivos/ids/936630-1600-1600/Anel-Solitario-Cielo-em-Ouro-Branco-18k-com-Diamante-de-Laboratorio-2-ct-108027_1_set.jpg?v=638773018472230000", "https://lojavivarafsv3.vtexassets.com/arquivos/ids/936629-1600-1600/Anel-Solitario-Cielo-em-Ouro-Branco-18k-com-Diamante-de-Laboratorio-2-ct-104141_5_set.jpg?v=638773018470200000"] }
             ],
             "Choker": [
-                {
-                    name: "Choker Premium", price: 89.90, images: [
-                        "https://source.unsplash.com/400x400/?choker",
-                        "https://source.unsplash.com/401x401/?choker"
-                    ]
-                }
+                { name: "Choker Premium", price: 89.90, images: ["https://dh9mkiolokjyr.cloudfront.net/Custom/Content/Products/13/96/13964_choker-prata-leve-riviera-zirconia-g-pr-10909-ff40822_z3_638887973230076587.webp", "https://dh9mkiolokjyr.cloudfront.net/Custom/Content/Products/13/96/13964_choker-prata-leve-riviera-zirconia-g-pr-10909-ff40822_z2_638768622112992422.webp"] },
+                { name: "Choker Fina", price: 79.90, images: ["https://images.tcdn.com.br/img/img_prod/836789/choker_de_prata_925_cravejada_com_swarovski_61814518_1_4bd33e5e5676d71491c840165a89e2da.jpg", "https://images.tcdn.com.br/img/img_prod/836789/choker_de_prata_925_cravejada_com_zirconias_61814518_1_7680de1e1cd915980e1a3f6295fc8759.jpg"] }
             ],
             "Tornozeleiras": [
-                {
-                    name: "Tornozeleira", price: 59.90, images: [
-                        "https://source.unsplash.com/400x400/?anklet",
-                        "https://source.unsplash.com/401x401/?anklet"
-                    ]
-                }
+                { name: "Tornozeleira", price: 59.90, images: ["https://http2.mlstatic.com/D_NQ_NP_2X_893187-MLB79557313634_102024-F.webp", "https://http2.mlstatic.com/D_NQ_NP_2X_856774-MLB79557313638_102024-F.webp"] },
+                { name: "Tornozeleira Luxo", price: 69.90, images: ["https://lojavivarafsv3.vtexassets.com/arquivos/ids/2498836-1600-1600/Pulseira-Life-Infinito-em-Prata-925-114009_1_set.jpg?v=638990028136270000", "https://lojavivarafsv3.vtexassets.com/arquivos/ids/2498838-1600-1600/Pulseira-Life-Infinito-em-Prata-925-114011_4_set.jpg?v=638990028149030000"] }
             ]
         };
 
         let cart = [];
 
-        function money(v) {
-            return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-        }
+        function money(v) { return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }
 
         function render() {
             let html = "";
@@ -404,8 +413,20 @@
             updateCart();
         }
 
-        function openCart() { cartDrawer.classList.add("active") }
-        function closeCart() { cartDrawer.classList.remove("active") }
+        function toggleGift() {
+            gift.checked = !gift.checked;
+            updateCart();
+        }
+
+        function openCart() {
+            cartDrawer.classList.add("active");
+            document.body.classList.add("no-scroll");
+        }
+
+        function closeCart() {
+            cartDrawer.classList.remove("active");
+            document.body.classList.remove("no-scroll");
+        }
 
         function updateCart() {
             let html = "";
@@ -431,8 +452,6 @@
             count.innerText = cart.length;
             updateCart();
         }
-
-        gift.addEventListener("change", updateCart);
 
         let imgs = [], index = 0;
         function zoom(cat, i) {
