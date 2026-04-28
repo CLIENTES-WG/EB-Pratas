@@ -547,12 +547,15 @@
 
         function send() {
             const nomeCliente = document.getElementById("name").value.trim();
-            const formaPagamento = document.getElementById("pay").value.trim();
+            const formaPagamento = document.getElementById("pay").value;
             const enderecoCliente = document.getElementById("address").value.trim();
 
-            if (cart.length === 0) return alert("Carrinho vazio");
+            if (cart.length === 0) {
+                alert("Carrinho vazio");
+                return;
+            }
 
-            if (!nomeCliente || !formaPagamento || !enderecoCliente) {
+            if (nomeCliente === "" || formaPagamento === "" || enderecoCliente === "") {
                 alert("Preencha todos os dados");
                 return;
             }
