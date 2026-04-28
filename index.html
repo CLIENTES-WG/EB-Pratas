@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EB Pratas</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif
+        }
+
+        body {
+            background: #f5f6f8;
+            padding-bottom: 80px
+        }
+
+        /* HEADER */
+        header {
+            text-align: center;
+            padding: 20px
+        }
+
+        header img {
+            width: 140px
+        }
+
+        /* MENU */
+        nav {
+            display: flex;
+            overflow: auto;
+            gap: 8px;
+            padding: 10px;
+            background: #fff;
+        }
+
+        nav a {
+            padding: 6px 12px;
+            background: #eee;
+            border-radius: 20px;
+            font-size: 13px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        /* SEÇÕES */
+        section {
+            padding: 15px
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 10px
+        }
+
+        /* PRODUTOS */
+        .products {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .product {
+            background: #fff;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .product img {
+            width: 100%;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .price {
+            font-weight: bold;
+            margin: 5px 0
+        }
+
+        button {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            background: #000;
+            color: #fff;
+            border-radius: 6px;
+        }
+
+        /* CART */
+        .cart {
+            position: fixed;
+            bottom: 90px;
+            right: 15px;
+            width: 55px;
+            height: 55px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+
+        .cart span {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: red;
+            padding: 3px 6px;
+            border-radius: 50%;
+            font-size: 12px;
+        }
+
+        /* DRAWER */
+        .cartDrawer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 90%;
+            background: #fff;
+            border-radius: 20px 20px 0 0;
+            transform: translateY(100%);
+            transition: .3s;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cartDrawer.active {
+            transform: translateY(0)
+        }
+
+        .cartHeader {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cartItems {
+            flex: 1;
+            overflow: auto;
+            padding: 10px;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            background: #f7f7f7;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .remove {
+            background: none;
+            border: none;
+            color: red;
+        }
+
+        .cartFooter {
+            padding: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .total {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .checkout {
+            margin-top: 10px;
+            padding: 12px;
+            background: #000;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+        }
+
+        /* MODAL */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .modal.active {
+            display: flex
+        }
+
+        .modal img {
+            width: 90%;
+            max-width: 350px;
+            border-radius: 10px;
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #000;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            display: none;
+            z-index: 300;
+        }
+
+        /* FOOTER */
+        .footer-fixed {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: #fff;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #ddd;
+            z-index: 40;
+        }
+
+        .footer-fixed a {
+            color: #000;
+            font-size: 22px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <img src="img/logoduda.png">
+    </header>
+
+    <nav>
+        <a href="#brincos">Brincos</a>
+        <a href="#colares">Colares</a>
+        <a href="#pulseiras">Pulseiras</a>
+        <a href="#aneis">Anéis</a>
+        <a href="#choker">Choker</a>
+        <a href="#tornozeleiras">Tornozeleiras</a>
+    </nav>
+
+    <main id="catalog"></main>
+
+    <div class="cart" onclick="openCart()">
+        <i class="fa fa-bag-shopping"></i>
+        <span id="count">0</span>
+    </div>
+
+    <!-- CARRINHO -->
+    <div class="cartDrawer" id="cartDrawer">
+        <div class="cartHeader">
+            <span>Seu pedido</span>
+            <i class="fa fa-xmark" onclick="closeCart()"></i>
+        </div>
+
+        <div class="cartItems" id="items"></div>
+
+        <div class="cartFooter">
+            <label><input type="checkbox" id="gift"> Presente (+R$1,00)</label>
+            <div class="total" id="total"></div>
+
+            <input id="name" placeholder="Seu nome">
+            <select id="pay">
+                <option value="">Pagamento</option>
+                <option>Pix</option>
+                <option>Dinheiro</option>
+            </select>
+
+            <textarea id="address" placeholder="Endereço"></textarea>
+
+            <button class="checkout" onclick="send()">Finalizar</button>
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal" id="imgModal" onclick="closeImg(event)">
+        <img id="imgZoom">
+    </div>
+
+    <div class="toast" id="toast">Produto adicionado</div>
+
+    <!-- FOOTER -->
+    <div class="footer-fixed">
+        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://wa.me/5566999663851"><i class="fa-brands fa-whatsapp"></i></a>
+    </div>
+
+    <script>
+        const products = {
+            "Brincos": [
+                {
+                    name: "Brinco Luxo", price: 55.99, images: [
+                        "https://source.unsplash.com/400x400/?earring",
+                        "https://source.unsplash.com/401x401/?earrings"
+                    ]
+                }
+            ],
+            "Colares": [
+                {
+                    name: "Colar Elegante", price: 89.90, images: [
+                        "https://source.unsplash.com/400x400/?necklace",
+                        "https://source.unsplash.com/401x401/?jewelry"
+                    ]
+                }
+            ],
+            "Pulseiras": [
+                {
+                    name: "Pulseira Fina", price: 69.90, images: [
+                        "https://source.unsplash.com/400x400/?bracelet",
+                        "https://source.unsplash.com/401x401/?bracelet"
+                    ]
+                }
+            ],
+            "Anéis": [
+                {
+                    name: "Anel Luxo", price: 79.90, images: [
+                        "https://source.unsplash.com/400x400/?ring",
+                        "https://source.unsplash.com/401x401/?ring"
+                    ]
+                }
+            ],
+            "Choker": [
+                {
+                    name: "Choker Premium", price: 89.90, images: [
+                        "https://source.unsplash.com/400x400/?choker",
+                        "https://source.unsplash.com/401x401/?choker"
+                    ]
+                }
+            ],
+            "Tornozeleiras": [
+                {
+                    name: "Tornozeleira", price: 59.90, images: [
+                        "https://source.unsplash.com/400x400/?anklet",
+                        "https://source.unsplash.com/401x401/?anklet"
+                    ]
+                }
+            ]
+        };
+
+        let cart = [];
+
+        function money(v) {
+            return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+        }
+
+        function render() {
+            let html = "";
+            Object.keys(products).forEach(cat => {
+                let id = cat.toLowerCase();
+                html += `<section id="${id}">
+<h2>${cat}</h2>
+<div class="products">`;
+
+                products[cat].forEach((p, i) => {
+                    html += `
+<div class="product">
+<img src="${p.images[0]}" onclick="zoom('${cat}',${i})">
+<h3>${p.name}</h3>
+<div class="price">${money(p.price)}</div>
+<button onclick="add('${cat}',${i})">Adicionar</button>
+</div>`;
+                });
+
+                html += "</div></section>";
+            });
+            catalog.innerHTML = html;
+        }
+
+        function add(cat, i) {
+            cart.push(products[cat][i]);
+            count.innerText = cart.length;
+            toast.style.display = "block";
+            setTimeout(() => toast.style.display = "none", 1000);
+            updateCart();
+        }
+
+        function openCart() { cartDrawer.classList.add("active") }
+        function closeCart() { cartDrawer.classList.remove("active") }
+
+        function updateCart() {
+            let html = "";
+            let total = 0;
+
+            cart.forEach((p, i) => {
+                html += `
+<div class="item">
+<span>${p.name}<br>${money(p.price)}</span>
+<button class="remove" onclick="removeItem(${i})">X</button>
+</div>`;
+                total += p.price;
+            });
+
+            if (gift.checked) total += 1;
+
+            items.innerHTML = html || "Carrinho vazio";
+            document.getElementById("total").innerText = "Total: " + money(total);
+        }
+
+        function removeItem(i) {
+            cart.splice(i, 1);
+            count.innerText = cart.length;
+            updateCart();
+        }
+
+        gift.addEventListener("change", updateCart);
+
+        let imgs = [], index = 0;
+        function zoom(cat, i) {
+            imgs = products[cat][i].images;
+            index = 0;
+            imgZoom.src = imgs[0];
+            imgModal.classList.add("active");
+        }
+
+        imgZoom.onclick = () => {
+            index = index === 0 ? 1 : 0;
+            imgZoom.src = imgs[index];
+        };
+
+        function closeImg(e) {
+            if (e.target.id === "imgModal") imgModal.classList.remove("active");
+        }
+
+        function send() {
+            if (cart.length === 0) return alert("Carrinho vazio");
+
+            if (!name.value || !pay.value || !address.value) {
+                alert("Preencha todos os dados");
+                return;
+            }
+
+            let msg = "*Pedido EB Pratas*%0A%0A";
+
+            cart.forEach(p => {
+                msg += `${p.name} - ${money(p.price)}%0A`;
+            });
+
+            msg += `%0A${total.innerText}`;
+            msg += `%0A*Nome:* ${name.value}`;
+            msg += `%0A*Pagamento:* ${pay.value}`;
+            msg += `%0A*Endereço:* ${address.value}`;
+
+            window.open(`https://wa.me/5566999663851?text=${msg}`);
+        }
+
+        render();
+    </script>
+
+</body>
+
+</html>
