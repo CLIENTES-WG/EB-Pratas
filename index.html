@@ -220,6 +220,13 @@
             border: 1px solid #ccc
         }
 
+        .delivery-note {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+            text-align: center;
+        }
+
         .checkout {
             margin-top: 10px;
             padding: 12px;
@@ -363,6 +370,10 @@
             </select>
 
             <textarea id="address" placeholder="Endereço"></textarea>
+
+            <div class="delivery-note">
+                A taxa de entrega será informada na conclusão do pedido via WhatsApp.
+            </div>
 
             <button class="checkout" onclick="send()">Finalizar</button>
         </div>
@@ -535,9 +546,13 @@
         }
 
         function send() {
+            const nomeCliente = document.getElementById("name").value.trim();
+            const formaPagamento = document.getElementById("pay").value.trim();
+            const enderecoCliente = document.getElementById("address").value.trim();
+
             if (cart.length === 0) return alert("Carrinho vazio");
 
-            if (!name.value || !pay.value || !address.value) {
+            if (!nomeCliente || !formaPagamento || !enderecoCliente) {
                 alert("Preencha todos os dados");
                 return;
             }
@@ -549,9 +564,10 @@
             });
 
             msg += `%0A${total.innerText}`;
-            msg += `%0A*Nome:* ${name.value}`;
-            msg += `%0A*Pagamento:* ${pay.value}`;
-            msg += `%0A*Endereço:* ${address.value}`;
+            msg += `%0A*Nome:* ${nomeCliente}`;
+            msg += `%0A*Pagamento:* ${formaPagamento}`;
+            msg += `%0A*Endereço:* ${enderecoCliente}`;
+            msg += `%0A%0A*Observação:* A taxa de entrega será informada na conclusão do pedido.`;
 
             window.open(`https://wa.me/5566999663851?text=${msg}`);
         }
