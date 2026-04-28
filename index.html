@@ -48,11 +48,13 @@
             border-radius: 20px;
             font-size: 13px;
             text-decoration: none;
-            color: #333
+            color: #333;
+            white-space: nowrap;
         }
 
         section {
-            padding: 15px
+            padding: 15px;
+            scroll-margin-top: 15px;
         }
 
         h2 {
@@ -234,6 +236,7 @@
             display: none;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
             z-index: 200
         }
 
@@ -245,6 +248,32 @@
             width: 90%;
             max-width: 350px;
             border-radius: 10px
+        }
+
+        .modalHint {
+            color: #fff;
+            font-size: 13px;
+            margin-top: 10px;
+            opacity: .9;
+        }
+
+        .modalDots {
+            display: flex;
+            justify-content: center;
+            gap: 7px;
+            margin-top: 12px;
+        }
+
+        .modalDot {
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, .45);
+            border-radius: 50%;
+        }
+
+        .modalDot.active {
+            background: #fff;
+            transform: scale(1.15);
         }
 
         .toast {
@@ -315,7 +344,7 @@
 
             <div class="gift-box" onclick="toggleGift()">
                 <div class="gift-left">
-                    <input type="checkbox" id="gift">
+                    <input type="checkbox" id="gift" onclick="event.stopPropagation(); updateCart();">
                     <div class="gift-text">
                         <strong>Embalagem para presente</strong>
                         <span>Caixinha especial</span>
@@ -341,6 +370,8 @@
 
     <div class="modal" id="imgModal" onclick="closeImg(event)">
         <img id="imgZoom">
+        <div class="modalDots" id="modalDots"></div>
+        <div class="modalHint">Toque na imagem para ver a próxima foto</div>
     </div>
 
     <div class="toast" id="toast">Produto adicionado</div>
@@ -380,12 +411,23 @@
 
         let cart = [];
 
-        function money(v) { return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }
+        function money(v) {
+            return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+        }
+
+        function normalizeId(text) {
+            return text
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
+        }
 
         function render() {
             let html = "";
+
             Object.keys(products).forEach(cat => {
-                let id = cat.toLowerCase();
+                let id = normalizeId(cat);
+
                 html += `<section id="${id}">
 <h2>${cat}</h2>
 <div class="products">`;
@@ -402,14 +444,17 @@
 
                 html += "</div></section>";
             });
+
             catalog.innerHTML = html;
         }
 
         function add(cat, i) {
             cart.push(products[cat][i]);
             count.innerText = cart.length;
+
             toast.style.display = "block";
             setTimeout(() => toast.style.display = "none", 1000);
+
             updateCart();
         }
 
@@ -421,6 +466,7 @@
         function openCart() {
             cartDrawer.classList.add("active");
             document.body.classList.add("no-scroll");
+            updateCart();
         }
 
         function closeCart() {
@@ -430,7 +476,7 @@
 
         function updateCart() {
             let html = "";
-            let total = 0;
+            let totalValue = 0;
 
             cart.forEach((p, i) => {
                 html += `
@@ -438,13 +484,13 @@
 <span>${p.name}<br>${money(p.price)}</span>
 <button class="remove" onclick="removeItem(${i})">X</button>
 </div>`;
-                total += p.price;
+                totalValue += p.price;
             });
 
-            if (gift.checked) total += 1;
+            if (gift.checked) totalValue += 1;
 
             items.innerHTML = html || "Carrinho vazio";
-            document.getElementById("total").innerText = "Total: " + money(total);
+            total.innerText = "Total: " + money(totalValue);
         }
 
         function removeItem(i) {
@@ -453,21 +499,39 @@
             updateCart();
         }
 
-        let imgs = [], index = 0;
+        let imgs = [];
+        let index = 0;
+
         function zoom(cat, i) {
             imgs = products[cat][i].images;
             index = 0;
-            imgZoom.src = imgs[0];
+            imgZoom.src = imgs[index];
+            updateModalDots();
             imgModal.classList.add("active");
         }
 
+        function updateModalDots() {
+            let html = "";
+
+            imgs.forEach((img, i) => {
+                html += `<span class="modalDot ${i === index ? "active" : ""}"></span>`;
+            });
+
+            modalDots.innerHTML = html;
+        }
+
         imgZoom.onclick = () => {
-            index = index === 0 ? 1 : 0;
+            if (imgs.length <= 1) return;
+
+            index = index === imgs.length - 1 ? 0 : index + 1;
             imgZoom.src = imgs[index];
+            updateModalDots();
         };
 
         function closeImg(e) {
-            if (e.target.id === "imgModal") imgModal.classList.remove("active");
+            if (e.target.id === "imgModal") {
+                imgModal.classList.remove("active");
+            }
         }
 
         function send() {
@@ -493,6 +557,7 @@
         }
 
         render();
+        updateCart();
     </script>
 
 </body>
